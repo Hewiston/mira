@@ -1,0 +1,26 @@
+# env
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# logs/media
+logs/
+media/
+*.log
+
+# node / next
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+out/
+dist/
+
+# misc
+.DS_Store

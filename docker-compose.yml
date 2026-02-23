@@ -1,0 +1,58 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  api:
+    image: python:3.11-slim
+    working_dir: /code
+    volumes:
+      - ./:/code
+    env_file:
+      - .env
+    command: bash -lc "pip install poetry && poetry install && poetry run uvicorn app.api.main:app --host 0.0.0.0 --port 8000 --reload"
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "8000:8000"
+
+  admin:
+    image: node:20-alpine
+    working_dir: /code/app/admin
+    volumes:
+      - ./:/code
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:8000}
+    command: sh -lc "npm install && npm run dev"
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+
+  bot:
+    image: python:3.11-slim
+    working_dir: /code
+    volumes:
+      - ./:/code
+    env_file:
+      - .env
+    command: bash -lc "pip install poetry && poetry install && poetry run python -m app.bot.main"
+    depends_on:
+      - api
+      - redis
+
+volumes:
+  pgdata:

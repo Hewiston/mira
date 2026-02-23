@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "geniehub"
+version = "0.1.0"
+description = "Telegram-first generator bot (Stars, coins, jobs)"
+authors = ["you"]
+packages = [{ include = "app" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.115.0"
+uvicorn = {extras = ["standard"], version = "^0.30.0"}
+pydantic = "^2.8.0"
+pydantic-settings = "^2.4.0"
+aiogram = "^3.10.0"
+httpx = "^0.27.0"
+SQLAlchemy = "^2.0.32"
+asyncpg = "^0.29.0"
+alembic = "^1.13.2"
+redis = "^5.0.8"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.9"
+
+[tool.poetry.scripts]
+api = "app.api.main:run"
+bot = "app.bot.main:run"
+
+
+
